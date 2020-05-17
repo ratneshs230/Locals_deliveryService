@@ -26,36 +26,36 @@ import com.squareup.picasso.Picasso;
 public class Products_page extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     RecyclerView products_recycler;
-    String TAG="Products_page";
+    String TAG = "Products_page";
     private FirebaseRecyclerAdapter adapter;
     FloatingActionButton add_product;
-    String type;
+    String type = "";
+
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_page);
 
-        Intent i=getIntent();
-        type=i.getStringExtra("Type");
+        Intent i = getIntent();
+        type = i.getStringExtra("Type");
 
-        add_product=findViewById(R.id.floatingActionButton);
-        products_recycler=findViewById(R.id.products_recycler);
+        add_product = findViewById(R.id.floatingActionButton);
+        products_recycler = findViewById(R.id.products_recycler);
 
-        if(type.equals("Vendor")){
+        if (type != null && type.equals("Vendor")) {
             add_product.setVisibility(View.VISIBLE);
-        }
-        else if(type.equals("Customer")){
+        } else if (type != null && type.equals("Customer")) {
             add_product.setVisibility(View.GONE);
         }
 
-        layoutManager=new GridLayoutManager(this,2);
+        layoutManager = new GridLayoutManager(this, 2);
         products_recycler.setLayoutManager(layoutManager);
 
         add_product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Products_page.this,Add_product.class);
+                Intent intent = new Intent(Products_page.this, Add_product.class);
                 startActivity(intent);
             }
         });
@@ -63,21 +63,22 @@ public class Products_page extends AppCompatActivity {
 
     }
 
-    public void fetch(){
+    public void fetch() {
 
         Query query = FirebaseDatabase.getInstance().getReference().child("Products");
         FirebaseRecyclerOptions<Products_model> options = new FirebaseRecyclerOptions.Builder<Products_model>()
                 .setQuery(query, Products_model.class)
                 .build();
-        Log.w(TAG,"query=>"+query);
-        adapter=new FirebaseRecyclerAdapter<Products_model, ViewHolder>(options){
+        Log.w(TAG, "query=>" + query);
+        adapter = new FirebaseRecyclerAdapter<Products_model, ViewHolder>(options) {
 
 
             @NonNull
             @Override
             public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview, parent, false);
-                return new ViewHolder(view);            }
+                return new ViewHolder(view);
+            }
 
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final Products_model model) {
@@ -88,8 +89,8 @@ public class Products_page extends AppCompatActivity {
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent=new Intent(Products_page.this,ProductDetail.class);
-                        intent.putExtra("product_id",model.getKey());
+                        Intent intent = new Intent(Products_page.this, ProductDetail.class);
+                        intent.putExtra("product_id", model.getKey());
                         startActivity(intent);
                     }
                 });
@@ -126,7 +127,6 @@ public class Products_page extends AppCompatActivity {
         }
 
 
-
         public void setProductname(String string) {
             productName.setText(string);
         }
@@ -136,7 +136,8 @@ public class Products_page extends AppCompatActivity {
 
 
         }
-            public void setProduct_img(String img){
+
+        public void setProduct_img(String img) {
 
             Picasso.get().load(img).into(product_img);
         }
@@ -146,7 +147,7 @@ public class Products_page extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-    adapter.startListening();
+        adapter.startListening();
     }
 
     @Override
