@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        final Intent Authintent=new Intent(MainActivity.this,Auth_select.class);
+        final Intent Authintent=new Intent(MainActivity.this,Login_phone.class);
 
 
 
