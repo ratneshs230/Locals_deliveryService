@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:id="@+id/root"
+    android:background="@drawable/edittext_layout"
     android:layout_margin="20dp">
 
     <ImageView
@@ -39,6 +40,21 @@
         android:id="@+id/product_price"
         android:layout_marginLeft="5dp"
         android:textSize="18dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="per"
+            android:layout_marginLeft="5dp"
+            android:textSize="18dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="kg"
+            android:id="@+id/units"
+            android:layout_marginLeft="5dp"
+            android:textSize="18dp"/>
+
     </LinearLayout>
 
 </LinearLayout>

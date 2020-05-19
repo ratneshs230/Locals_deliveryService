@@ -36,15 +36,16 @@ import static java.lang.Integer.parseInt;
  public class Add_product extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
      ImageView addPhoto;
      TextView product_name, product_desc, product_price;
-     Spinner measure_spinner;
+     Spinner measure_spinner,category_spinner;
     Button addBtn;
      private String[] unit = new String[]{"kg", "grams"};
+     private String[] productCategory=new String[]{"Vegetables","Fruits","Dairy"};
      Uri imageUri;
      Products_model model;
      String TAG = "Add products";
      DatabaseReference db, reference;
      StorageReference storageReference;
-     String pushKey, measure;
+     String pushKey, measure,category;
 
      @Override
      protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -72,7 +73,7 @@ import static java.lang.Integer.parseInt;
          product_price = findViewById(R.id.productAddprice);
          measure_spinner = findViewById(R.id.measure);
          addBtn=findViewById(R.id.add_product_btn);
-
+         category_spinner=findViewById(R.id.productAddcategory);
          reference = FirebaseDatabase.getInstance().getReference();
          db = reference.child("Products");
          storageReference = FirebaseStorage.getInstance().getReference().child("Products");
@@ -81,6 +82,40 @@ import static java.lang.Integer.parseInt;
          model = new Products_model();
          ArrayAdapter<String> adapter = new ArrayAdapter(this,
                  android.R.layout.simple_spinner_item, unit);
+         ArrayAdapter<String> cat_adapter = new ArrayAdapter(this,
+                 android.R.layout.simple_spinner_item, productCategory);
+
+         cat_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+         category_spinner.setAdapter(cat_adapter);
+         category_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+             @Override
+             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                 switch (position) {
+                     case 0: {
+                         category = "Vegetables";
+                         Log.w(TAG,"category=>"+category);
+                         break;
+                     }
+                     case 1: {
+                         category = "Fruits";
+                         Log.w(TAG,"category=>"+category);
+                         break;
+                     }
+
+                     case 3: {
+                         category = "Dairy";
+                         Log.w(TAG,"category=>"+category);
+                         break;
+                     }
+                 }
+             }
+
+             @Override
+             public void onNothingSelected(AdapterView<?> parent) {
+
+             }
+         });
+
          adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
          measure_spinner.setAdapter(adapter);
@@ -106,12 +141,12 @@ import static java.lang.Integer.parseInt;
 
      public void store_data() {
          final Intent intent = new Intent(Add_product.this, ProductDetail.class);
-
+         Log.w(TAG,"StoreData=>");
          final String store_title = product_name.getText().toString();
          final String store_desc = product_desc.getText().toString();
-         final Integer store_price =parseInt(product_price.getText().toString());
+         final String store_price =product_price.getText().toString();
          final String[] path = new String[1];
-         if (!store_title.isEmpty() && store_price!=null) {
+         if (!store_title.isEmpty()) {
 
 
              try {
@@ -140,7 +175,7 @@ import static java.lang.Integer.parseInt;
                                  intent.putExtra("image", path[0]);
 
 
-                                 reference.updateChildren(imageObject);
+
 
                              }
                          }).addOnFailureListener(new OnFailureListener() {
@@ -152,17 +187,20 @@ import static java.lang.Integer.parseInt;
                          });
                      }
                  });
-
-
+                Log.w(TAG,"name="+store_title);
+                 model.setImage(path[0]);
                  model.setProduct_name(store_title);
                  model.setProduct_desc(store_desc);
                  model.setPrice(store_price);
                  model.setMeasure(measure);
-                pushKey=reference.push().getKey();
+                 Log.w(TAG,"measure="+measure);
+                 model.setCategory(category);
+                 Log.w(TAG,"category="+category);
+                 pushKey=db.push().getKey();
                  Log.w(TAG, "Testing||referenceKey" + pushKey);
-
+                 Log.w(TAG,"PushKey="+pushKey);
                  model.setKey(pushKey);
-                 reference.child(pushKey).setValue(model);
+                 db.child(pushKey).setValue(model);
 
 
                  Toast.makeText(Add_product.this, "Event Hosted Successfully", Toast.LENGTH_LONG).show();

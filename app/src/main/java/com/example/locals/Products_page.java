@@ -10,55 +10,59 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
-public class Products_page extends AppCompatActivity {
+public class Products_page extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     RecyclerView.LayoutManager layoutManager;
     RecyclerView products_recycler;
     String TAG = "Products_page";
-    private FirebaseRecyclerAdapter adapter;
+    private FirebaseRecyclerAdapter adapter,cat_adapter;
     FloatingActionButton add_product;
-    String type = "";
-
-    @SuppressLint("RestrictedApi")
+    String category;
+    Products_model model;
+    ImageButton cart_btn,cat_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_page);
 
-        Intent i = getIntent();
-        type = i.getStringExtra("Type");
 
-        add_product = findViewById(R.id.floatingActionButton);
+
         products_recycler = findViewById(R.id.products_recycler);
 
-        if (type != null && type.equals("Vendor")) {
-            add_product.setVisibility(View.VISIBLE);
-        } else if (type != null && type.equals("Customer")) {
-            add_product.setVisibility(View.GONE);
-        }
+
 
         layoutManager = new GridLayoutManager(this, 2);
         products_recycler.setLayoutManager(layoutManager);
+        cart_btn=findViewById(R.id.cart_btn);
+        cat_btn=findViewById(R.id.cat_btn);
 
-        add_product.setOnClickListener(new View.OnClickListener() {
+        cat_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Products_page.this, Add_product.class);
-                startActivity(intent);
+                PopupMenu popup = new PopupMenu(Products_page.this, v);
+                popup.setOnMenuItemClickListener(Products_page.this);
+                popup.inflate(R.menu.category_menu);
+                popup.show();
             }
         });
+
         fetch();
 
     }
@@ -131,7 +135,7 @@ public class Products_page extends AppCompatActivity {
             productName.setText(string);
         }
 
-        public void setProductPrice(Integer price) {
+        public void setProductPrice(String price) {
             productPrice.setText(price);
 
 
@@ -155,4 +159,81 @@ public class Products_page extends AppCompatActivity {
         super.onStop();
         adapter.stopListening();
     }
+    public void fetch_category_wise(String category) {
+        try {
+            model = new Products_model();
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+            Query query = database.child("Products").orderByChild("category").equalTo(category);
+
+            FirebaseRecyclerOptions<Products_model> options = new FirebaseRecyclerOptions.Builder<Products_model>()
+                    .setQuery(query, Products_model.class)
+                    .build();
+            cat_adapter = new FirebaseRecyclerAdapter<Products_model, ViewHolder>(options) {
+                @NonNull
+                @Override
+                public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview, parent, false);
+                    return new ViewHolder(view);
+                }
+
+                @Override
+                protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, @NonNull final Products_model model) {
+                    holder.setProduct_img(model.getImage());
+                    Log.w(TAG,"imageURL=>"+model.getImage());
+                    holder.setProductname(model.getProduct_name());
+                    holder.setProductPrice(model.getPrice());
+                    holder.root.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(Products_page.this,ProductDetail.class);
+                            intent.putExtra("product_id",model.getKey());
+                            startActivity(intent);
+                        }
+                    });
+
+
+
+                }
+
+
+            };
+
+            products_recycler.setAdapter(cat_adapter);
+            cat_adapter.startListening();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.category_menu, popup.getMenu());
+        popup.show();
+    }
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.vegetables:{
+                category="Vegetables";
+                fetch_category_wise(category);
+                return true;}
+            case R.id.fruits:{
+                category="fruits";
+                fetch_category_wise(category);
+                return true;}
+            case R.id.dairy:{
+                category="Dairy";
+                fetch_category_wise(category);
+                return true;}
+
+            default:
+                return false;
+        }
+    }
+
+
 }
