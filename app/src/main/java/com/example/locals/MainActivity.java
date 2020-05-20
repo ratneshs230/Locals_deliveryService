@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        final Intent Authintent=new Intent(MainActivity.this,Products_page.class);
+        final Intent Authintent=new Intent(MainActivity.this,Cart.class);
 
 
 

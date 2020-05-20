@@ -30,17 +30,17 @@
 </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/cart_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="@+id/header"
         tools:layout_editor_absoluteX="16dp" />
 
     <Button
+        android:id="@+id/payment_navigate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Proceed to Payout"
-        android:id="@+id/payment_navigate"
-        app:layout_constraintBottom_toBottomOf="@+id/recyclerView" />
+        app:layout_constraintBottom_toBottomOf="@+id/cart_recycler" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

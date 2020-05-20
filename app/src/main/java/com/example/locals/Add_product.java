@@ -74,12 +74,19 @@ import static java.lang.Integer.parseInt;
          measure_spinner = findViewById(R.id.measure);
          addBtn=findViewById(R.id.add_product_btn);
          category_spinner=findViewById(R.id.productAddcategory);
+
+         model = new Products_model();
+
+
          reference = FirebaseDatabase.getInstance().getReference();
-         db = reference.child("Products");
+         db = reference.child("Products").push();
+         pushKey=db.getKey();
+         model.setKey(pushKey);
+
+
          storageReference = FirebaseStorage.getInstance().getReference().child("Products");
 
 
-         model = new Products_model();
          ArrayAdapter<String> adapter = new ArrayAdapter(this,
                  android.R.layout.simple_spinner_item, unit);
          ArrayAdapter<String> cat_adapter = new ArrayAdapter(this,
@@ -164,16 +171,16 @@ import static java.lang.Integer.parseInt;
                                  path[0] = uri.toString();
 
                                  Map<String, Object> imageObject = new HashMap<>();
-                                 imageObject.put("story_image", path[0]);
+                                 imageObject.put("image", path[0]);
 
 
                                  model.setImage(path[0]);
 
-                                 Log.w(TAG, "URI=====>>>" + uri);
+                                 Log.w(TAG, "Imageobject=====>>>" + imageObject);
                                  Log.w(TAG, "Path=====>>>" + path[0]);
 
-                                 intent.putExtra("image", path[0]);
 
+                                 db.updateChildren(imageObject);
 
 
 
@@ -187,8 +194,9 @@ import static java.lang.Integer.parseInt;
                          });
                      }
                  });
-                Log.w(TAG,"name="+store_title);
-                 model.setImage(path[0]);
+                 Log.w(TAG, "PathOutside=====>>>" + path[0]);
+
+                 Log.w(TAG,"name="+store_title);
                  model.setProduct_name(store_title);
                  model.setProduct_desc(store_desc);
                  model.setPrice(store_price);
@@ -196,16 +204,15 @@ import static java.lang.Integer.parseInt;
                  Log.w(TAG,"measure="+measure);
                  model.setCategory(category);
                  Log.w(TAG,"category="+category);
-                 pushKey=db.push().getKey();
-                 Log.w(TAG, "Testing||referenceKey" + pushKey);
+
                  Log.w(TAG,"PushKey="+pushKey);
-                 model.setKey(pushKey);
-                 db.child(pushKey).setValue(model);
+                 intent.putExtra("product_Id", pushKey);
+
+                 db.setValue(model);
 
 
                  Toast.makeText(Add_product.this, "Event Hosted Successfully", Toast.LENGTH_LONG).show();
 
-                 intent.putExtra("product_Id", pushKey);
 
                  startActivity(intent);
              } catch (Exception e) {

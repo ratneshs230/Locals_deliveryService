@@ -33,7 +33,7 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
     RecyclerView products_recycler;
     String TAG = "Products_page";
     private FirebaseRecyclerAdapter adapter,cat_adapter;
-    FloatingActionButton add_product;
+
     String category;
     Products_model model;
     ImageButton cart_btn,cat_btn;

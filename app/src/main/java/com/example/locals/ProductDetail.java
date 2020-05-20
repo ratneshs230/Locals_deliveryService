@@ -39,8 +39,7 @@ public class ProductDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
-        Intent i=getIntent();
-        product_Id=i.getStringExtra("product_id");
+        product_Id=getIntent().getStringExtra("product_Id");
         Log.w(TAG,"Product ID recieved=>"+product_Id);
 
         product_detail_desc=findViewById(R.id.product_detail_desc);
@@ -56,20 +55,23 @@ public class ProductDetail extends AppCompatActivity {
         fileref=db.child("Products").child(product_Id);
         model=new Products_model();
         cart_model=new Cart_model();
-        cartRef=db.child("Cart");
+        cartRef=db.child("Cart").push();
+
+        cartKey=cartRef.getKey();
+        cart_model.setCart_key(cartKey);
+
         fetch();
 
         addtoCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+
                 cart_model.setCart_Product_name(model.getProduct_name());
                 cart_model.setCart_Product_ID(model.getKey());
-                cartKey=cartRef.push().getKey();
-                cart_model.setCart_key(cartKey);
 
 
-                cartRef.child(cartKey).setValue(cart_model);
+                cartRef.setValue(cart_model);
 
 
 

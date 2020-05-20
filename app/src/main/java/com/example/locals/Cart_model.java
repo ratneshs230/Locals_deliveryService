@@ -7,6 +7,15 @@ public class Cart_model {
     String cart_key;
     String cart_Product_date;
     String cart_Product_ID;
+    String cart_Image;
+
+    public String getCart_Image() {
+        return cart_Image;
+    }
+
+    public void setCart_Image(String cart_Image) {
+        this.cart_Image = cart_Image;
+    }
 
     public String getCart_Product_name() {
         return cart_Product_name;
