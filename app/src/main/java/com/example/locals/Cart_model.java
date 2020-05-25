@@ -4,10 +4,30 @@ public class Cart_model {
     String cart_Product_name;
     String cart_Product_qty;
     String cart_Product_price;
+    String total_price;
     String cart_key;
     String cart_Product_date;
     String cart_Product_ID;
     String cart_Image;
+    String userId;
+
+    public String getTotal_price() {
+        return total_price;
+    }
+
+    public void setTotal_price(String total_price) {
+        this.total_price = total_price;
+    }
+
+
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getCart_Image() {
         return cart_Image;
@@ -25,21 +45,7 @@ public class Cart_model {
         this.cart_Product_name = cart_Product_name;
     }
 
-    public String getCart_Product_qty() {
-        return cart_Product_qty;
-    }
 
-    public void setCart_Product_qty(String cart_Product_qty) {
-        this.cart_Product_qty = cart_Product_qty;
-    }
-
-    public String getCart_Product_price() {
-        return cart_Product_price;
-    }
-
-    public void setCart_Product_price(String cart_Product_price) {
-        this.cart_Product_price = cart_Product_price;
-    }
 
     public String getCart_key() {
         return cart_key;
@@ -66,5 +72,21 @@ public class Cart_model {
     }
 
     public Cart_model() {
+    }
+
+    public String getCart_Product_qty() {
+        return cart_Product_qty;
+    }
+
+    public void setCart_Product_qty(String cart_Product_qty) {
+        this.cart_Product_qty = cart_Product_qty;
+    }
+
+    public String getCart_Product_price() {
+        return cart_Product_price;
+    }
+
+    public void setCart_Product_price(String cart_Product_price) {
+        this.cart_Product_price = cart_Product_price;
     }
 }

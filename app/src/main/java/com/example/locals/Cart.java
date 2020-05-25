@@ -20,30 +20,52 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
 public class Cart extends AppCompatActivity {
+
     RecyclerView cart_recycler;
     Button payment;
     RecyclerView.LayoutManager layoutManager;
     Cart_model model;
-    String TAG = "Cart_Page";
+    String TAG = "Cart_Page",uid;
     private FirebaseRecyclerAdapter adapter;
-
-
+    DatabaseReference cart_reference;
+    FirebaseDatabase databaseReference;
+    List<Integer> price;
+    private int sum=0;
+    Map<String, Object> cartobject;
+    DatabaseReference ref;
+    int newqty,newrate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
+        uid=getIntent().getStringExtra("uid");
         payment=findViewById(R.id.payment_navigate);
         cart_recycler=findViewById(R.id.cart_recycler);
         model=new Cart_model();
+        price=new ArrayList<>();
+         cartobject= new HashMap<>();
 
+
+
+        databaseReference=FirebaseDatabase.getInstance();
+        cart_reference=databaseReference.getReference().child("Cart").child(uid);
         layoutManager = new LinearLayoutManager(this);
         cart_recycler.setLayoutManager(layoutManager);
 
@@ -58,8 +80,31 @@ public class Cart extends AppCompatActivity {
 
     }
 
+    private int subtotal(){
+        cart_reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    price.add(ds.child("cart_Product_price").getValue(Integer.class));
+                    Log.w(TAG, "Price-=>" + price);
+
+                }
+                for (int i = 0; i < price.size(); i++) {
+                    Log.w(TAG, "Price_List" + i + "=>" + price.get(i));
+                    sum = sum + price.get(i);
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        Log.w(TAG, "sum=>" + sum);
+        return sum;
+    }
     public void fetch(){
-        Query query = FirebaseDatabase.getInstance().getReference().child("Cart");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
         FirebaseRecyclerOptions<Cart_model> options = new FirebaseRecyclerOptions.Builder<Cart_model>()
                 .setQuery(query, Cart_model.class)
                 .build();
@@ -75,16 +120,60 @@ public class Cart extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final Cart_model model) {
+            protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final Cart_model model) {
+
 
                 holder.setProduct_img(model.getCart_Image());
                 holder.setProductname(model.getCart_Product_name());
-                holder.setProductPrice(model.getCart_Product_price());
+                holder.setQty(model.getCart_Product_qty());
+                holder.inc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Integer count = Integer.parseInt(holder.product_qty.getText().toString());
+                        newqty = count + 1;
+                        String quantity = newqty + "";
+                        holder.product_qty.setText(quantity);
+                        String rate=model.getCart_Product_price();
+                        newrate=Integer.parseInt(rate)*newqty;
+                        cartobject.put("cart_Product_qty",newqty+"");
+                        cartobject.put("total_price",newrate+"");
+                        Log.w(TAG,"NEW_PRICE=>"+newrate+"NEW_QUANTITY=>"+newqty);
+
+                        ref=databaseReference.getReference().child("Cart").child(uid).child(model.getCart_Product_ID());
+                        Log.w(TAG,"KEY=>"+model.getCart_key());
+                        ref.updateChildren(cartobject);
+                        holder.setProductPrice(newrate+"");
+
+
+                    }
+                });
+                holder.dec.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Integer count = Integer.parseInt(holder.product_qty.getText().toString());
+                        newqty = count + 1;
+                        String quantity = newqty + "";
+                        holder.product_qty.setText(quantity);
+                        String rate=holder.productPrice.getText().toString();
+                        newrate=Integer.parseInt(rate)*newqty;
+                        cartobject.put("cart_Product_qty",newqty+"");
+                        cartobject.put("total_price",newrate+"");
+                        Log.w(TAG,"NEW_PRICE=>"+newrate+"NEW_QUANTITY=>"+newqty);
+                        holder.setProductPrice(newrate+"");
+
+                        ref=databaseReference.getReference().child("Cart").child(uid).child(model.getCart_Product_ID());
+                        Log.w(TAG,"KEY=>"+model.getCart_key());
+                        ref.updateChildren(cartobject);
+                    }
+                });
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(Cart.this, Payments_page.class);
-                        intent.putExtra("Total", 20);
+
+                        intent.putExtra("Total", subtotal());
+                        Log.w(TAG, "sum=>" + subtotal());
+
                         startActivity(intent);
                     }
                 });
@@ -98,7 +187,7 @@ public class Cart extends AppCompatActivity {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public LinearLayout root;
-        public TextView productName, productPrice,qty;
+        public TextView productName, productPrice,product_qty;
         public ImageView product_img;
         ImageButton inc,dec;
 
@@ -110,23 +199,9 @@ public class Cart extends AppCompatActivity {
             product_img = itemView.findViewById(R.id.cart_objectImage);
             inc=itemView.findViewById(R.id.increase_qty);
             dec=itemView.findViewById(R.id.decrease_qty);
-            qty=itemView.findViewById(R.id.qty);
+            product_qty=itemView.findViewById(R.id.qty);
 
-            inc.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Integer quantity=parseInt(qty.getText().toString());
-                    qty.setText(quantity+1);
-                }
-            });
-            dec.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Integer quantity=parseInt(qty.getText().toString());
-                    qty.setText(quantity-1);
 
-                }
-            });
         }
         public LinearLayout getRoot() {
             return root;
@@ -143,7 +218,11 @@ public class Cart extends AppCompatActivity {
         public void setProduct_img(String img) {
             Picasso.get().load(img).into(product_img);
         }
+        public void setQty(String qty){
+            product_qty.setText(qty);
+        }
     }
+
 
 
 

@@ -4,17 +4,19 @@ import android.widget.ImageView;
 
 public class Products_model {
     String product_name;
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
     String price;
     String image;
     String key;
 String category;
 
 
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
     public String getCategory() {
         return category;
@@ -58,9 +60,6 @@ String category;
         this.product_name = product_name;
     }
 
-    public String getPrice() {
-        return price;
-    }
 
     public String getProduct_desc() {
         return product_desc;

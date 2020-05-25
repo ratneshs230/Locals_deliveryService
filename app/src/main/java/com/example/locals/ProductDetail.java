@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,62 +25,108 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProductDetail extends AppCompatActivity {
     String product_Id;
     DatabaseReference db,fileref,cartRef;
+
+    ImageButton inc,dec;
 
     Products_model model;
     Cart_model cart_model;
     String TAG="ProductDetails";
     ImageView product_detail_image;
     String cartKey;
-    TextView  product_detail_name,product_detail_desc,product_detail_price,product_detail_units;
+    TextView  product_detail_name,product_detail_desc,product_detail_price,product_detail_units,qty;
     Button addtoCart;
-
+    int newqty=1;
+   String uid;
+    Map<String, Object> cartobject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
-        product_Id=getIntent().getStringExtra("product_Id");
-        Log.w(TAG,"Product ID recieved=>"+product_Id);
+        try {
+            product_Id = getIntent().getStringExtra("product_id");
+            uid = getIntent().getStringExtra("uid");
 
-        product_detail_desc=findViewById(R.id.product_detail_desc);
-        product_detail_image=findViewById(R.id.product_detail_image);
-        product_detail_name=findViewById(R.id.product_detail_name);
-        product_detail_price=findViewById(R.id.product_detail_price);
-        product_detail_units=findViewById(R.id.product_detail_unit);
+            Log.w(TAG, "User ID recieved=>" + uid);
 
-        addtoCart=findViewById(R.id.addToCart);
+            Log.w(TAG, "Product ID recieved=>" + product_Id);
 
+            product_detail_desc = findViewById(R.id.product_detail_desc);
+            product_detail_image = findViewById(R.id.product_detail_image);
+            product_detail_name = findViewById(R.id.product_detail_name);
+            product_detail_price = findViewById(R.id.product_detail_price);
+            product_detail_units = findViewById(R.id.product_detail_unit);
+            qty = findViewById(R.id.qty);
+            inc = findViewById(R.id.increase_qty);
+            dec = findViewById(R.id.decrease_qty);
 
-        db= FirebaseDatabase.getInstance().getReference();
-        fileref=db.child("Products").child(product_Id);
-        model=new Products_model();
-        cart_model=new Cart_model();
-        cartRef=db.child("Cart").push();
+            addtoCart = findViewById(R.id.addToCart);
 
-        cartKey=cartRef.getKey();
-        cart_model.setCart_key(cartKey);
+            cartobject = new HashMap<>();
+            db = FirebaseDatabase.getInstance().getReference();
+            fileref = db.child("Products").child(product_Id);
+            model = new Products_model();
+            cart_model = new Cart_model();
+            cartRef = db.child("Cart").child(uid);
 
-        fetch();
+            cartKey = cartRef.getKey();
+            cart_model.setCart_key(cartKey);
 
-        addtoCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                cart_model.setCart_Product_name(model.getProduct_name());
-                cart_model.setCart_Product_ID(model.getKey());
-
-
-                cartRef.setValue(cart_model);
+            fetch();
 
 
+            inc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Integer count = Integer.parseInt(qty.getText().toString());
+                    newqty = count + 1;
+                    String quantity = newqty + "";
+                    qty.setText(quantity);
 
-            }
-        });
 
+                }
+            });
+
+            dec.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Integer count = Integer.parseInt(qty.getText().toString());
+                    newqty = count - 1;
+                    String quantity = newqty + "";
+                    qty.setText(quantity);
+
+
+                }
+            });
+
+            Log.w(TAG, "NEWQTY=>" + newqty);
+
+            addtoCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Integer total=Integer.parseInt(model.getPrice()) * newqty;
+                    cart_model.setUserId(uid);
+                    cart_model.setCart_Product_name(model.getProduct_name());
+                    cart_model.setCart_Product_ID(model.getKey());
+                    cart_model.setCart_Product_price(model.getPrice());
+                    cart_model.setTotal_price(total.toString());
+                    cart_model.setCart_Product_ID(model.getKey());
+                    cart_model.setCart_Product_qty(newqty+"");
+
+
+                    cartRef.child(model.getKey()).setValue(cart_model);
+
+
+                }
+            });
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
 

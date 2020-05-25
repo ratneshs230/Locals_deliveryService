@@ -2,6 +2,7 @@ package com.example.locals;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,35 +25,67 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Products_page extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     RecyclerView.LayoutManager layoutManager;
     RecyclerView products_recycler;
     String TAG = "Products_page";
     private FirebaseRecyclerAdapter adapter,cat_adapter;
-
+    Button addtoBag,btn;
     String category;
+    LinearLayout setqty;
     Products_model model;
+    Map<String, Object> product_object;
+    DatabaseReference ref;
     ImageButton cart_btn,cat_btn;
+    String no;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
+    String uid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_page);
 
+        Intent i=getIntent();
+        no=i.getStringExtra("no");
 
+        mAuth=FirebaseAuth.getInstance();
+        user=mAuth.getCurrentUser();
 
+        if(user!=null){
+            uid=user.getUid();
+        }
         products_recycler = findViewById(R.id.products_recycler);
-
-
-
+     /*   addtoBag=findViewById(R.id.addToBag);
+        setqty=findViewById(R.id.setQty);*/
+     btn=findViewById(R.id.add_btn);
+        product_object=new HashMap<>();
         layoutManager = new GridLayoutManager(this, 2);
         products_recycler.setLayoutManager(layoutManager);
         cart_btn=findViewById(R.id.cart_btn);
         cat_btn=findViewById(R.id.cat_btn);
+
+        if(no.equals("+911111222233")){
+            btn.setVisibility(View.VISIBLE);
+        }
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Products_page.this,Add_product.class);
+                startActivity(intent);
+            }
+        });
+
 
         cat_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +94,15 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
                 popup.setOnMenuItemClickListener(Products_page.this);
                 popup.inflate(R.menu.category_menu);
                 popup.show();
+            }
+        });
+
+        cart_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Products_page.this,Cart.class);
+                intent.putExtra("uid",uid);
+                startActivity(intent);
             }
         });
 
@@ -85,15 +128,18 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final Products_model model) {
+            protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final Products_model model) {
 
                 holder.setProduct_img(model.getImage());
                 holder.setProductname(model.getProduct_name());
                 holder.setProductPrice(model.getPrice());
+
+
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(Products_page.this, ProductDetail.class);
+                        intent.putExtra("uid",uid);
                         intent.putExtra("product_id", model.getKey());
                         startActivity(intent);
                     }
@@ -106,10 +152,8 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout root;
+        public ConstraintLayout root;
         public TextView productName, productPrice;
-
-
         public ImageView product_img;
 
         public ViewHolder(@NonNull View itemView) {
@@ -122,11 +166,11 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
 
         }
 
-        public LinearLayout getRoot() {
+        public ConstraintLayout getRoot() {
             return root;
         }
 
-        public void setRoot(LinearLayout root) {
+        public void setRoot(ConstraintLayout root) {
             this.root = root;
         }
 
@@ -181,6 +225,12 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
                     holder.setProduct_img(model.getImage());
                     Log.w(TAG,"imageURL=>"+model.getImage());
                     holder.setProductname(model.getProduct_name());
+
+
+
+
+
+
                     holder.setProductPrice(model.getPrice());
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override

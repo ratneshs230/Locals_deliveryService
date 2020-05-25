@@ -151,7 +151,7 @@ import static java.lang.Integer.parseInt;
          Log.w(TAG,"StoreData=>");
          final String store_title = product_name.getText().toString();
          final String store_desc = product_desc.getText().toString();
-         final String store_price =product_price.getText().toString();
+         final String store_price =(product_price.getText().toString());
          final String[] path = new String[1];
          if (!store_title.isEmpty()) {
 

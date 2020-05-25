@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        final Intent Authintent=new Intent(MainActivity.this,Cart.class);
+        final Intent Authintent=new Intent(MainActivity.this,Login_phone.class);
 
 
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
 
             }
-        }, 3000);
+        }, 1000);
 
 
 

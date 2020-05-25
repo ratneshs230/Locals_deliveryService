@@ -31,30 +31,41 @@
             tools:layout_editor_absoluteX="1dp" />
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp"
             android:background="#ffffff"
+            android:orientation="horizontal"
 
+            android:padding="20dp"
             app:layout_constraintBottom_toBottomOf="@+id/products_recycler">
 
                 <ImageButton
+                    android:id="@+id/cat_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#ffffff"
-                    android:id="@+id/cat_btn"
                     android:layout_weight="1"
+                    android:background="#ffffff"
                     android:onClick="showPopup"
                     android:src="@mipmap/border_all_24px_outlined" />
 
                 <ImageButton
+                    android:id="@+id/cart_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#ffffff"
                     android:layout_weight="1"
-                    android:id="@+id/cart_btn"
+                    android:background="#ffffff"
                     android:src="@mipmap/local_grocery_store_24px_outlined" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="add"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

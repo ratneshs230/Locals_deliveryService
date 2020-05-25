@@ -84,7 +84,7 @@ public class OtpActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(OtpActivity.this, Products_page.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
+                            intent.putExtra("no",phonenumber);
                             startActivity(intent);
 
                         } else {
