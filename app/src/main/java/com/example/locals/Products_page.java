@@ -119,7 +119,6 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
         Log.w(TAG, "query=>" + query);
         adapter = new FirebaseRecyclerAdapter<Products_model, ViewHolder>(options) {
 
-
             @NonNull
             @Override
             public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -134,7 +133,6 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
                 holder.setProductname(model.getProduct_name());
                 holder.setProductPrice(model.getPrice());
 
-
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -144,7 +142,6 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
                         startActivity(intent);
                     }
                 });
-
             }
         };
         products_recycler.setAdapter(adapter);
@@ -162,42 +159,28 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
             productName = itemView.findViewById(R.id.productName);
             productPrice = itemView.findViewById(R.id.product_price);
             product_img = itemView.findViewById(R.id.productImage);
-
-
         }
-
         public ConstraintLayout getRoot() {
             return root;
         }
-
         public void setRoot(ConstraintLayout root) {
             this.root = root;
         }
-
-
         public void setProductname(String string) {
             productName.setText(string);
         }
-
         public void setProductPrice(String price) {
-            productPrice.setText(price);
-
-
+        productPrice.setText(price);
         }
-
         public void setProduct_img(String img) {
-
             Picasso.get().load(img).into(product_img);
         }
-
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         adapter.startListening();
     }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -219,19 +202,14 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
                     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview, parent, false);
                     return new ViewHolder(view);
                 }
-
                 @Override
                 protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, @NonNull final Products_model model) {
                     holder.setProduct_img(model.getImage());
                     Log.w(TAG,"imageURL=>"+model.getImage());
                     holder.setProductname(model.getProduct_name());
 
-
-
-
-
-
                     holder.setProductPrice(model.getPrice());
+
                     holder.root.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -240,14 +218,8 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
                             startActivity(intent);
                         }
                     });
-
-
-
                 }
-
-
             };
-
             products_recycler.setAdapter(cat_adapter);
             cat_adapter.startListening();
         }
@@ -256,8 +228,6 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
             e.printStackTrace();
         }
     }
-
-
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
@@ -279,11 +249,8 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
                 category="Dairy";
                 fetch_category_wise(category);
                 return true;}
-
             default:
                 return false;
         }
     }
-
-
 }
