@@ -125,7 +125,8 @@ public class Cart extends AppCompatActivity {
 
                 holder.setProduct_img(model.getCart_Image());
                 holder.setProductname(model.getCart_Product_name());
-                holder.setQty(model.getCart_Product_qty());
+                holder.setQty(model.getTotal_price());
+                holder.setProductPrice(model.getCart_Product_price());
                 holder.inc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -151,7 +152,12 @@ public class Cart extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Integer count = Integer.parseInt(holder.product_qty.getText().toString());
-                        newqty = count + 1;
+                        newqty = count - 1;
+                        if(newqty==0){
+                            holder.dec.setEnabled(false);
+                        }else{
+                            holder.dec.setEnabled(true);
+                        }
                         String quantity = newqty + "";
                         holder.product_qty.setText(quantity);
                         String rate=holder.productPrice.getText().toString();
@@ -164,6 +170,14 @@ public class Cart extends AppCompatActivity {
                         ref=databaseReference.getReference().child("Cart").child(uid).child(model.getCart_Product_ID());
                         Log.w(TAG,"KEY=>"+model.getCart_key());
                         ref.updateChildren(cartobject);
+                    }
+                });
+                holder.delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ref=databaseReference.getReference().child("Cart").child(uid).child(model.getCart_Product_ID());
+                        ref.removeValue();
+                        
                     }
                 });
                 holder.root.setOnClickListener(new View.OnClickListener() {
@@ -190,6 +204,7 @@ public class Cart extends AppCompatActivity {
         public TextView productName, productPrice,product_qty;
         public ImageView product_img;
         ImageButton inc,dec;
+        Button delete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -200,7 +215,7 @@ public class Cart extends AppCompatActivity {
             inc=itemView.findViewById(R.id.increase_qty);
             dec=itemView.findViewById(R.id.decrease_qty);
             product_qty=itemView.findViewById(R.id.qty);
-
+            delete=itemView.findViewById(R.id.delete_item);
 
         }
         public LinearLayout getRoot() {
@@ -221,6 +236,7 @@ public class Cart extends AppCompatActivity {
         public void setQty(String qty){
             product_qty.setText(qty);
         }
+
     }
 
 

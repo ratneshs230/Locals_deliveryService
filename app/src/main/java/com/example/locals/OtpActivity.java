@@ -49,16 +49,19 @@ public class OtpActivity extends AppCompatActivity {
         verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 String code = editText.getText().toString().trim();
 
                 if ((code.isEmpty() || code.length() < 6)) {
-
+                    progressBar.setVisibility(View.GONE);
                     editText.setError("Enter code...");
                     editText.requestFocus();
                     return;
                 }
-                verifyCode(code);
+                else {
 
+                    verifyCode(code);
+                }
 
             }
         });
@@ -88,6 +91,7 @@ public class OtpActivity extends AppCompatActivity {
                             startActivity(intent);
 
                         } else {
+                            progressBar.setVisibility(View.GONE);
                             Toast.makeText(OtpActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
