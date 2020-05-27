@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:context=".MainActivity"
     android:orientation="vertical">
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +16,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:id="@+id/name"
-        android:text="Ratnesh Sharma"/>
+        android:text="Ravi Krishna"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -24,7 +26,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:id="@+id/upi_id"
-        android:text="ratneshs230-1@okhdfcbank"/>
+        android:text="9598848185@upi"/><!--ratneshs230-1@okhdfcbank-->
 
     <EditText
         android:layout_width="match_parent"
@@ -35,8 +37,7 @@
         android:layout_marginTop="20dp"
         android:id="@+id/amount_et"
         android:inputType="numberDecimal"
-        android:text="5"/>
-
+        android:text="1"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -46,6 +47,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:id="@+id/note"
+        android:layout_marginBottom="200dp"
         android:text="Test UPI Payment"/>
 
     <Button
@@ -53,6 +55,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:id="@+id/send"
+        android:gravity="center"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:text="Pay Now"/>
