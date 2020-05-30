@@ -15,31 +15,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"       />
+            android:visibility="gone"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/page_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Products"
+                    android:gravity="center_horizontal"
+                    android:background="@color/colorPrimaryLight"
+                    android:padding="3dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/products_recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-            tools:layout_editor_absoluteX="1dp" />
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/page_title" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"
@@ -49,10 +47,18 @@
             android:orientation="horizontal"
 
             android:padding="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/products_recycler">
+            app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageButton
                     android:id="@+id/cat_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#ffffff"
+                    android:onClick="showPopup"
+                    android:src="@mipmap/border_all_24px_outlined" />
+                <ImageButton
+                    android:id="@+id/profile_link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

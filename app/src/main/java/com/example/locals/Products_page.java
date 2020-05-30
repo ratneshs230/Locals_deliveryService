@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,11 +47,12 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
     Products_model model;
     Map<String, Object> product_object;
     DatabaseReference ref;
-    ImageButton cart_btn,cat_btn;
+    ImageButton cart_btn,cat_btn,profile_link;
     String no;
     FirebaseAuth mAuth;
     FirebaseUser user;
     String uid;
+    TextView title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,18 +67,27 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
         if(user!=null){
             uid=user.getUid();
         }
+
+        SharedPreferences pref=getSharedPreferences("Phone_Preference",MODE_PRIVATE);
+        SharedPreferences.Editor editor=pref.edit();
+
+        editor.putString("uid",uid);
+        editor.apply();
+
         products_recycler = findViewById(R.id.products_recycler);
-     /*   addtoBag=findViewById(R.id.addToBag);
-        setqty=findViewById(R.id.setQty);*/
-     btn=findViewById(R.id.add_btn);
+        profile_link=findViewById(R.id.profile_link);
+        title=findViewById(R.id.page_title);
+        btn=findViewById(R.id.add_btn);
         product_object=new HashMap<>();
-        layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new GridLayoutManager(this, 3);
         products_recycler.setLayoutManager(layoutManager);
         cart_btn=findViewById(R.id.cart_btn);
         cat_btn=findViewById(R.id.cat_btn);
 
-        if(no.equals("+911111222233")){
+        if(no!=null && no.equals("+911111222233")){
             btn.setVisibility(View.VISIBLE);
+        }else{
+            btn.setVisibility(View.GONE);
         }
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +97,12 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
             }
         });
 
+        profile_link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         cat_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,6 +117,8 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(Products_page.this,Cart.class);
+
+
                 intent.putExtra("uid",uid);
                 startActivity(intent);
             }
@@ -110,8 +128,14 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
 
     }
 
-    public void fetch() {
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        fetch();
+    }
 
+    public void fetch() {
+        title.setText("Products");
         Query query = FirebaseDatabase.getInstance().getReference().child("Products");
         FirebaseRecyclerOptions<Products_model> options = new FirebaseRecyclerOptions.Builder<Products_model>()
                 .setQuery(query, Products_model.class)
@@ -131,6 +155,8 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
 
                 holder.setProduct_img(model.getImage());
                 holder.setProductname(model.getProduct_name());
+                holder.setProductUnits(model.getMeasure());
+
                 holder.setProductPrice(model.getPrice());
 
                 holder.root.setOnClickListener(new View.OnClickListener() {
@@ -139,19 +165,24 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
                         Intent intent = new Intent(Products_page.this, ProductDetail.class);
                         intent.putExtra("uid",uid);
                         intent.putExtra("product_id", model.getKey());
+                        intent.putExtra("from","home");
+
                         startActivity(intent);
                     }
                 });
             }
         };
+
         products_recycler.setAdapter(adapter);
+        adapter.startListening();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public ConstraintLayout root;
-        public TextView productName, productPrice;
+        public TextView productName, productPrice,productUnit;
         public ImageView product_img;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -159,6 +190,7 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
             productName = itemView.findViewById(R.id.productName);
             productPrice = itemView.findViewById(R.id.product_price);
             product_img = itemView.findViewById(R.id.productImage);
+            productUnit=itemView.findViewById(R.id.units);
         }
         public ConstraintLayout getRoot() {
             return root;
@@ -171,6 +203,9 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
         }
         public void setProductPrice(String price) {
         productPrice.setText(price);
+        }
+        public void setProductUnits(String unit) {
+            productPrice.setText(unit);
         }
         public void setProduct_img(String img) {
             Picasso.get().load(img).into(product_img);
@@ -188,6 +223,7 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
     }
     public void fetch_category_wise(String category) {
         try {
+            title.setText(category);
             model = new Products_model();
             DatabaseReference database = FirebaseDatabase.getInstance().getReference();
             Query query = database.child("Products").orderByChild("category").equalTo(category);
@@ -207,7 +243,7 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
                     holder.setProduct_img(model.getImage());
                     Log.w(TAG,"imageURL=>"+model.getImage());
                     holder.setProductname(model.getProduct_name());
-
+                    holder.setProductUnits(model.getMeasure());
                     holder.setProductPrice(model.getPrice());
 
                     holder.root.setOnClickListener(new View.OnClickListener() {
@@ -234,15 +270,16 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
         inflater.inflate(R.menu.category_menu, popup.getMenu());
         popup.show();
     }
-    @Override
+  @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.vegetables:{
                 category="Vegetables";
+
                 fetch_category_wise(category);
                 return true;}
             case R.id.fruits:{
-                category="fruits";
+                category="Fruits";
                 fetch_category_wise(category);
                 return true;}
             case R.id.dairy:{

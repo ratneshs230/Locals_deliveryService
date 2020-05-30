@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ import static java.lang.Integer.parseInt;
      DatabaseReference db, reference;
      StorageReference storageReference;
      String pushKey, measure,category;
-
+     ProgressBar progressBar;
      @Override
      protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
          super.onActivityResult(requestCode, resultCode, data);
@@ -55,12 +56,17 @@ import static java.lang.Integer.parseInt;
                  if (resultCode == Activity.RESULT_OK) {
                      imageUri = data.getData();
                      addPhoto.setImageURI(imageUri);
+                     storeImage(imageUri);
 
                  }
              }
          } catch (Exception e) {
              e.printStackTrace();
          }
+     }
+
+     private void storeImage(Uri imageUri) {
+
      }
 
      @Override
@@ -74,6 +80,7 @@ import static java.lang.Integer.parseInt;
          measure_spinner = findViewById(R.id.measure);
          addBtn=findViewById(R.id.add_product_btn);
          category_spinner=findViewById(R.id.productAddcategory);
+         progressBar=findViewById(R.id.progressbar);
 
          model = new Products_model();
 
@@ -85,8 +92,6 @@ import static java.lang.Integer.parseInt;
 
 
          storageReference = FirebaseStorage.getInstance().getReference().child("Products");
-
-
          ArrayAdapter<String> adapter = new ArrayAdapter(this,
                  android.R.layout.simple_spinner_item, unit);
          ArrayAdapter<String> cat_adapter = new ArrayAdapter(this,
@@ -131,7 +136,10 @@ import static java.lang.Integer.parseInt;
          addBtn.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
+
+                 progressBar.setVisibility(View.VISIBLE);
                  store_data();
+
              }
          });
 
@@ -147,18 +155,17 @@ import static java.lang.Integer.parseInt;
      }
 
      public void store_data() {
-         final Intent intent = new Intent(Add_product.this, ProductDetail.class);
          Log.w(TAG,"StoreData=>");
          final String store_title = product_name.getText().toString();
          final String store_desc = product_desc.getText().toString();
-         final String store_price =(product_price.getText().toString());
-         final String[] path = new String[1];
-         if (!store_title.isEmpty()) {
+         final String store_price =product_price.getText().toString();
 
+         if (!store_title.isEmpty()) {
+             final String[] path = new String[1];
 
              try {
 
-
+                Log.w(TAG,"imageUri=>"+imageUri);
                  storageReference.child(store_title).putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                      @Override
                      public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -169,21 +176,17 @@ import static java.lang.Integer.parseInt;
                              @Override
                              public void onSuccess(Uri uri) {
                                  path[0] = uri.toString();
-
+Toast.makeText(Add_product.this,"Image Uploaded",Toast.LENGTH_LONG).show();
                                  Map<String, Object> imageObject = new HashMap<>();
-                                 imageObject.put("image", path[0]);
+                                 imageObject.put("image", uri.toString());
 
+                                 progressBar.setVisibility(View.GONE  );
 
-                                 model.setImage(path[0]);
+                                 model.setImage(uri.toString());
 
-                                 Log.w(TAG, "Imageobject=====>>>" + imageObject);
-                                 Log.w(TAG, "Path=====>>>" + path[0]);
 
 
                                  db.updateChildren(imageObject);
-
-
-
                              }
                          }).addOnFailureListener(new OnFailureListener() {
                              @Override
@@ -194,7 +197,8 @@ import static java.lang.Integer.parseInt;
                          });
                      }
                  });
-                 Log.w(TAG, "PathOutside=====>>>" + path[0]);
+
+
 
                  Log.w(TAG,"name="+store_title);
                  model.setProduct_name(store_title);
@@ -206,7 +210,6 @@ import static java.lang.Integer.parseInt;
                  Log.w(TAG,"category="+category);
 
                  Log.w(TAG,"PushKey="+pushKey);
-                 intent.putExtra("product_Id", pushKey);
 
                  db.setValue(model);
 
@@ -214,19 +217,12 @@ import static java.lang.Integer.parseInt;
                  Toast.makeText(Add_product.this, "Event Hosted Successfully", Toast.LENGTH_LONG).show();
 
 
-                 startActivity(intent);
              } catch (Exception e) {
                  e.printStackTrace();
              }
          }
 
      }
-
-
-
-
-
-
      @Override
      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
          switch (position) {

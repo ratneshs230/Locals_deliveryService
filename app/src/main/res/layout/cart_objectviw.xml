@@ -4,9 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/root"
+
     android:orientation="vertical">
 
-
+<!--
     <LinearLayout
         android:id="@+id/root"
         android:layout_width="match_parent"
@@ -14,95 +16,122 @@
         android:orientation="horizontal"
 
         app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/cart_objectImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:padding="3dp" />
-
-
-
-            <TextView
-                android:id="@+id/cart_objectName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_weight="1"
-                android:text="NAME"
-                android:textSize="20dp" />
+-->
+    <ImageView
+        android:id="@+id/cart_objectImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="3dp"
+        android:layout_margin="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-        <LinearLayout
+    <TextView
+        android:id="@+id/cart_objectName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:text="NAME"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/cart_objectImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/cart_objectRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:text="Rate"
+        android:textSize="15dp"
+        app:layout_constraintStart_toEndOf="@+id/cart_objectImage"
+        app:layout_constraintTop_toBottomOf="@+id/cart_objectName" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical">
+            android:text="Rs"
+            android:textSize="20dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rs"
-                android:textSize="30dp" />
-            <TextView
-                android:id="@+id/cart_objectPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:textSize="30dp" />
-
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/cart_objectPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textSize="20dp" />
 
 
     </LinearLayout>
 
-   <LinearLayout
-        android:layout_width="match_parent"
+
+    <Button
+        android:id="@+id/delete_item"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_weight="1"
+        android:text="Delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_margin="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cart_objectImage">
 
-        app:layout_constraintTop_toBottomOf="@+id/root">
-       <Button
-           android:id="@+id/delete_item"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginHorizontal="20dp"
-           android:layout_weight="1"
-           android:text="Delete"
-           />
-
-
-       <ImageButton
+        <ImageButton
             android:id="@+id/decrease_qty"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_marginHorizontal="3dp"
             android:background="@drawable/rounded_button"
             android:padding="10dp"
+            android:layout_gravity="center_vertical"
             android:src="@mipmap/remove_24px_outlined" />
 
-       <TextView
-           android:id="@+id/qty"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginHorizontal="3dp"
-           android:background="@drawable/edittext_layout"
-           android:inputType="number"
-           android:padding="12dp"
-           android:text="1" />
+        <TextView
+            android:id="@+id/qty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="3dp"
 
-       <ImageButton
-           android:id="@+id/increase_qty"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginHorizontal="3dp"
-           android:background="@drawable/rounded_button"
-           android:padding="10dp"
-           android:src="@mipmap/add_24px_outlined" />
+            android:inputType="number"
+            android:padding="4dp"
+            android:text="1" />
+        <TextView
+            android:id="@+id/units"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:inputType="number"
+            android:padding="3dp"
+            android:text="kg" />
+        <ImageButton
+            android:id="@+id/increase_qty"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/rounded_button"
+            android:padding="10dp"
+            android:src="@mipmap/add_24px_outlined" />
 
-   </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

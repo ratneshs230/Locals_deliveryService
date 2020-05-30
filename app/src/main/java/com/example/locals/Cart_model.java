@@ -9,6 +9,16 @@ public class Cart_model {
     String cart_Product_date;
     String cart_Product_ID;
     String cart_Image;
+    String cart_measure;
+
+    public String getCart_measure() {
+        return cart_measure;
+    }
+
+    public void setCart_measure(String cart_measure) {
+        this.cart_measure = cart_measure;
+    }
+
     String userId;
 
     public String getTotal_price() {

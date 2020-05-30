@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +34,7 @@ public class OtpActivity extends AppCompatActivity {
     private Button verify;
     private TextView resend;
     private String phonenumber;
+    DatabaseReference ref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,17 @@ public class OtpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            User_model model=new User_model();
+                            ref= FirebaseDatabase.getInstance().getReference().child("User");
+
+                            SharedPreferences pref=getSharedPreferences("Phone_Preference",MODE_PRIVATE);
+                            SharedPreferences.Editor editor=pref.edit();
+
+                            editor.putString("Phone",phonenumber);
+                            editor.apply();
+
+
+
 
                             Intent intent = new Intent(OtpActivity.this, Products_page.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

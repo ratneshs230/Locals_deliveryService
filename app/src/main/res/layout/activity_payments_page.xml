@@ -1,64 +1,343 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    tools:context=".MainActivity">
 
-    <EditText
+    <ImageButton
+        android:id="@+id/addressEdit"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:src="@drawable/ic_edit_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/linearLayout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:id="@+id/name"
-        android:text="Ravi Krishna"/>
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delivery Address:"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/deliveryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/deliveryAdd1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="House No." />
+
+        <TextView
+            android:id="@+id/deliveryAdd2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Area/Block" />
+
+        <TextView
+            android:id="@+id/deliveryAdd3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="City Name" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout7" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/order_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="UPI ID"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:id="@+id/upi_id"
-        android:text="9598848185@upi"/><!--ratneshs230-1@okhdfcbank-->
+        android:padding="10dp"
+        app:layout_constraintTop_toTopOf="@+id/view">
 
-    <EditText
+        <TextView
+            android:id="@+id/TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Order Details"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Cart Subtotal"
+            android:textSize="15dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/TV" />
+
+        <TextView
+            android:id="@+id/cartotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="5dp"
+            android:text="300"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/TV" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Delivery Charges"
+            android:textSize="15dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+        <TextView
+            android:id="@+id/deliveryCharge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="5dp"
+            android:text="10"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cartotal" />
+
+        <ImageButton
+            android:id="@+id/cartItemsEdit"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_edit_black_24dp"
+            android:background="#ffffff"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deliveryCharge" />
+        <TextView
+            android:id="@+id/cartItems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
+            android:padding="10dp"
+            android:text="Items in Shopping Bag"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deliveryCharge" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:padding="5dp"
+            android:id="@+id/head"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cartItems">
+
+        <TextView
+            android:id="@+id/cartItemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Products Name"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/cartItemQty"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quantity"
+            android:layout_weight="2"
+            />
+
+        <TextView
+            android:id="@+id/cartItemPrice"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price"
+            android:layout_weight="2" />
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/cartItemRecycler"
+            android:layout_height="200dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/head"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/order_details" />
+
+    <TextView
+        android:id="@+id/upi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Amount"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:id="@+id/amount_et"
-        android:inputType="numberDecimal"
-        android:text="1"/>
-
-    <EditText
+        android:layout_marginVertical="20dp"
+        android:textSize="20dp"
+        android:text="Pay Online Using UPI"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:background="@color/colorSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/order_details" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/upilayout"
+    android:visibility="gone"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/upi"
+    android:orientation="vertical"
+    >
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Note"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:id="@+id/note"
-        android:layout_marginBottom="200dp"
-        android:text="Test UPI Payment"/>
-
+        android:textSize="15dp"
+        android:layout_margin="10dp"
+        android:textStyle="italic"
+        android:text="Pay online using one of the upi apps on your phone."/>
     <Button
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:id="@+id/send"
         android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:text="Pay Now"/>
-
+        android:padding="10dp"
+        android:id="@+id/upi_payment"
+        android:background="@drawable/rounded_button"
+        android:layout_gravity="center"
+        android:text="Pay"/>
 
 </LinearLayout>
+    <TextView
+        android:id="@+id/Cod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:background="@color/colorSecondary"
+        android:text="Pay Upon delivery"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upilayout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/CodLayout"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Cod"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_margin="10dp"
+            android:textStyle="italic"
+            android:text="Pay using cash upon recieving your delivery"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:id="@+id/cash_payment"
+            android:background="@drawable/rounded_button"
+            android:layout_gravity="center"
+            android:text="Confirm Order"/>
+
+    </LinearLayout>
+
+   <!-- <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
+
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Name"
+            android:text="Ravi Krishna" />
+
+        <EditText
+            android:id="@+id/upi_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="UPI ID"
+            android:text="9598848185@upi" />
+
+        <EditText
+            android:id="@+id/amount_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Amount"
+            android:inputType="numberDecimal"
+            android:text="1" />
+
+        <EditText
+            android:id="@+id/note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="200dp"
+            android:hint="Note"
+            android:text="Test UPI Payment" />
+</LinearLayout>
+-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
