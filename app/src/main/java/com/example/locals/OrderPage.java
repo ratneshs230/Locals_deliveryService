@@ -25,13 +25,13 @@ import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
 public class OrderPage extends AppCompatActivity {
-        RecyclerView orderRecycler;
+    RecyclerView orderRecycler;
 
-        DatabaseReference order_reference;
-        LinearLayoutManager layoutManager;
-        FirebaseDatabase databaseReference;
-        String uid;
-        String TAG="OrderPage";
+    DatabaseReference order_reference;
+    LinearLayoutManager layoutManager;
+    FirebaseDatabase databaseReference;
+    String uid;
+    String TAG="OrderPage";
     private FirebaseRecyclerAdapter adapter,cat_adapter;
 
     @Override
@@ -69,7 +69,7 @@ public class OrderPage extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final Order_model model) {
 
-                holder.setOrderId(model.getKey());
+                holder.setOrderId(model.getOrderkey());
                 if(model.getStatus()){
                     holder.setOrderStatus("Delivered on "+model.getDelivery_date()+" , "+model.getDelivery_time());
                     holder.setpaymentStatus("Payment Status : Paid");
@@ -87,7 +87,7 @@ public class OrderPage extends AppCompatActivity {
                 holder.setOrderAddress(model.getAddress());
                 holder.setOrderDate(model.getOrder_date()+" "+model.getDelivery_time());
 
-                holder.root.setOnClickListener(new View.OnClickListener() {
+               /* holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(OrderPage.this, OrderDetails.class);
@@ -97,7 +97,7 @@ public class OrderPage extends AppCompatActivity {
 
                         startActivity(intent);
                     }
-                });
+                });*/
             }
         };
 

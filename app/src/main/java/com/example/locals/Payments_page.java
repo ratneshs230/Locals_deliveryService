@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,7 +57,7 @@ Payments_page extends AppCompatActivity {
     Integer sum;
     String Name,key,address;
     Order_model model;
-    DatabaseReference orderRef;
+    DatabaseReference orderRef,cartRef;
     Map<String,String> productIds;
     Cart_model cart_model;
     RecyclerView cartItemRecycler;
@@ -104,13 +106,12 @@ Payments_page extends AppCompatActivity {
 
         cartTotal.setText(sum+"");
 
-
+        cartRef=FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
         orderRef= FirebaseDatabase.getInstance().getReference().child("Orders").child(uid);
 
         key=orderRef.push().getKey();
 
-        model.setKey(key);
-        model.setName(Name);
+        model.setOrderkey(key);
         model.setSum(sum+"");
         model.setAddress(address);
         model.setUid(mypref.getString("uid",""));
@@ -124,6 +125,7 @@ Payments_page extends AppCompatActivity {
 
 
         getProductdetails();
+
 
 /*        Subtotal=getIntent().getStringExtra("Total");
         Log.w(TAG,"Subtotal=>"+Subtotal);
@@ -150,10 +152,13 @@ Payments_page extends AppCompatActivity {
             public void onClick(View v) {
 
                 model.setModeOfPayment("COD");
-                orderRef.child(key).setValue(model);
-                orderRef.child(key).child("products").setValue(productIds);
                 Toast.makeText(Payments_page.this,"Order placed. Mode of payment : Cash on Delivery ",Toast.LENGTH_LONG).show();
-
+                orderRef.child(key).setValue(model);
+                Intent intent=new Intent(Payments_page.this,OrderPlacedActivity.class);
+                intent.putExtra("orderId",key);
+                Log.w(TAG,"Order ID=>"+key);
+                moveRecord(cartRef,orderRef.child(key).child("OrderList"));
+                startActivity(intent);
             }
         });
         cartItems.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +182,7 @@ Payments_page extends AppCompatActivity {
             public void onClick(View v) {
                 CodLayout.setVisibility(View.GONE);
 
-                if(Upi.getVisibility()==View.GONE){
+                if(upiLayout.getVisibility()==View.GONE){
                     upiLayout.setVisibility(View.VISIBLE);
                 }
                 else
@@ -189,7 +194,7 @@ Payments_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 upiLayout.setVisibility(View.GONE);
-                if(Cod.getVisibility()==View.GONE){
+                if(CodLayout.getVisibility()==View.GONE){
                     CodLayout.setVisibility(View.VISIBLE);
                 }
                 else
@@ -199,6 +204,28 @@ Payments_page extends AppCompatActivity {
         });
     }
 
+    private void moveRecord(DatabaseReference fromPath,final DatabaseReference toPAth){
+        ValueEventListener valueEventListener=new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                toPAth.setValue(dataSnapshot.getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isComplete()){
+                            Log.w(TAG,"Successfully moved");
+                        }else{
+                            Log.w(TAG,"Moved Failed");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };fromPath.addListenerForSingleValueEvent(valueEventListener);
+    }
 
     public void fetch(){
         Query query = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
@@ -363,10 +390,10 @@ Payments_page extends AppCompatActivity {
                 Toast.makeText(Payments_page.this, "Transaction successful.", Toast.LENGTH_SHORT).show();
 
                 orderRef.child(key).setValue(model);
-                orderRef.child(key).child("products").setValue(productIds);
 
-                Intent intent=new Intent(Payments_page.this,OrderPage.class);
-
+                Intent intent=new Intent(Payments_page.this,OrderPlacedActivity.class);
+                intent.putExtra("orderId",key);
+                moveRecord(cartRef,orderRef.child(key).child("OrderList"));
                 startActivity(intent);
                 Log.e("UPI", "payment successfull: "+approvalRefNo);
             }
