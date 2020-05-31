@@ -34,20 +34,20 @@ import java.util.Map;
 
 public class ProductDetail extends AppCompatActivity {
     String product_Id;
-    DatabaseReference db,fileref,cartRef;
+    DatabaseReference db, fileref, cartRef;
 
-    ImageButton inc,dec;
+    ImageButton inc, dec;
     CoordinatorLayout coordinatorLayout;
 
     Products_model model;
     Cart_model cart_model;
-    String TAG="ProductDetails";
+    String TAG = "ProductDetails";
     ImageView product_detail_image;
     String cartKey;
-    TextView  product_detail_name,product_detail_desc,product_detail_price,product_detail_units,qty;
+    TextView product_detail_name, product_detail_desc, product_detail_price, product_detail_units, qty;
     Button addtoCart;
-    int newqty=1;
-   String uid,from,previousQty;
+    int newqty = 1;
+    String uid, from, previousQty;
     Map<String, Object> cartobject;
 
     @Override
@@ -57,11 +57,10 @@ public class ProductDetail extends AppCompatActivity {
         try {
             product_Id = getIntent().getStringExtra("product_id");
             uid = getIntent().getStringExtra("uid");
-            from=getIntent().getStringExtra("from");
-            if(from.equals("cart")){
-                previousQty=getIntent().getStringExtra("qty");
-            }
-            else previousQty=1+"";
+            from = getIntent().getStringExtra("from");
+            if (from.equals("cart")) {
+                previousQty = getIntent().getStringExtra("qty");
+            } else previousQty = 1 + "";
 
             Log.w(TAG, "Qty  recieved=>" + previousQty);
             Log.w(TAG, "Product ID recieved=>" + product_Id);
@@ -71,7 +70,7 @@ public class ProductDetail extends AppCompatActivity {
             product_detail_name = findViewById(R.id.product_detail_name);
             product_detail_price = findViewById(R.id.product_detail_price);
             product_detail_units = findViewById(R.id.product_detail_unit);
-            
+
 
             qty = findViewById(R.id.qty);
             inc = findViewById(R.id.increase_qty);
@@ -107,19 +106,12 @@ public class ProductDetail extends AppCompatActivity {
             dec.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Integer count = Integer.parseInt(qty.getText().toString());
-
-                    if(newqty==1){
-                        dec.setEnabled(false);
-                    }else if(newqty>1){
-                        dec.setEnabled(true);
+                    int count = Integer.parseInt(qty.getText().toString());
+                    if (count != 0) {
+                        String countStr = String.valueOf(count - 1);
                         newqty = count - 1;
-
+                        qty.setText(countStr);
                     }
-                    String quantity = newqty + "";
-                    qty.setText(quantity);
-
-
                 }
             });
 
@@ -128,25 +120,25 @@ public class ProductDetail extends AppCompatActivity {
             addtoCart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Integer total=Integer.parseInt(model.getPrice()) * newqty;
+                    Integer total = Integer.parseInt(model.getPrice()) * newqty;
                     cart_model.setUserId(uid);
                     cart_model.setCart_Product_name(model.getProduct_name());
                     cart_model.setCart_Product_ID(model.getKey());
                     cart_model.setCart_Product_price(model.getPrice());
                     cart_model.setTotal_price(total.toString());
                     cart_model.setCart_Product_ID(model.getKey());
-                    cart_model.setCart_Product_qty(newqty+"");
+                    cart_model.setCart_Product_qty(newqty + "");
                     cart_model.setCart_Image(model.getImage());
                     cart_model.setCart_measure(model.getMeasure());
 
 
                     cartRef.child(model.getKey()).setValue(cart_model);
-                    Toast.makeText(ProductDetail.this,"Product Added to Cart",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProductDetail.this, "Product Added to Cart", Toast.LENGTH_LONG).show();
 
 
                 }
             });
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -157,8 +149,6 @@ public class ProductDetail extends AppCompatActivity {
         super.onStart();
         fetch();
     }
-
-
 
 
     @Override
@@ -177,18 +167,18 @@ public class ProductDetail extends AppCompatActivity {
                     });
             snackbar.show();
         }*/
-    public void fetch(){
+    public void fetch() {
         fileref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                model=dataSnapshot.getValue(Products_model.class);
-                Log.w(TAG,"model=>"+model);
-                Log.w(TAG,"datasnapShot=>"+dataSnapshot);
+                model = dataSnapshot.getValue(Products_model.class);
+                Log.w(TAG, "model=>" + model);
+                Log.w(TAG, "datasnapShot=>" + dataSnapshot);
                 product_detail_name.setText(model.getProduct_name());
                 product_detail_desc.setText(model.getProduct_desc());
                 product_detail_price.setText(model.getPrice());
                 product_detail_units.setText(model.getMeasure());
-                if(!previousQty.isEmpty()) {
+                if (!previousQty.isEmpty()) {
                     qty.setText(previousQty);
                 }
 
@@ -199,6 +189,7 @@ public class ProductDetail extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });    }
+        });
+    }
 }
 
