@@ -75,7 +75,7 @@
                     android:layout_weight="1"
                     android:background="#ffffff"
                     android:onClick="showPopup"
-                    android:src="@drawable/ic_card_travel_black_24dp" />
+                    android:src="@drawable/bg_btn_blue" />
 
                 <ImageButton
                     android:id="@+id/cart_btn"
