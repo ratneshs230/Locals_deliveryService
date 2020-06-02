@@ -26,7 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
-public class OtpActivity extends AppCompatActivity {
+public class
+
+
+OtpActivity extends AppCompatActivity {
     private String verificationid;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;

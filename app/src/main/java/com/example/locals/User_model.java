@@ -7,6 +7,15 @@ public class User_model {
     String add2;
     String add3;
     String uid;
+    String Image;
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        Image = image;
+    }
 
     public User_model() {
     }

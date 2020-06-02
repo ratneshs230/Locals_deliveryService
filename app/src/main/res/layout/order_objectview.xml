@@ -12,20 +12,10 @@
         android:id="@+id/orderDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:text="30/05/2020 05:50"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-
-        android:layout_marginHorizontal="5dp"
-        android:background="@color/colorDivider"
-        app:layout_constraintBottom_toBottomOf="@+id/orderDate" />
 
     <TextView
         android:id="@+id/orderId"
@@ -46,19 +36,31 @@
         android:layout_marginHorizontal="20dp"
         android:padding="5dp"
         android:text="DeliveryStatus"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orderId" />
+        app:layout_constraintTop_toBottomOf="@+id/orderDate" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+
+        android:layout_marginHorizontal="5dp"
+        android:background="@color/colorDivider"
+        app:layout_constraintBottom_toBottomOf="@+id/orderDeliveryStatus" />
+
 
     <TextView
         android:id="@+id/orderDeliveryAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
         android:padding="5dp"
+        android:layout_margin="10dp"
         android:text="Delivery Address"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orderDeliveryStatus" />
-
+        app:layout_constraintTop_toBottomOf="@+id/orderId"
+        />
 
     <TextView
         android:id="@+id/orderTotal"
@@ -66,10 +68,10 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:padding="5dp"
-        android:textSize="15dp"
         android:text="Rs 50"
+        android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orderId" />
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <TextView
         android:id="@+id/paymentStatus"
@@ -78,15 +80,9 @@
         android:layout_marginHorizontal="20dp"
         android:padding="5dp"
         android:text="Payment status"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/orderTotal" />
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="5dp"
-        android:background="@color/colorDivider"
-        app:layout_constraintBottom_toBottomOf="@+id/orderDeliveryAddress" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

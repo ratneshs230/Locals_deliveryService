@@ -62,6 +62,11 @@ public class Cart extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         uid=getIntent().getStringExtra("uid");
+        SharedPreferences pref=getSharedPreferences("Phone_Preference",MODE_PRIVATE);
+        uid=pref.getString("uid","");
+
+
+
 
         total=findViewById(R.id.subtotal);
         payment=findViewById(R.id.payment_navigate);

@@ -1,6 +1,8 @@
 package com.example.locals;
 
 import androidx.annotation.NonNull;
+import android.content.Intent;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +30,7 @@ import com.squareup.picasso.Picasso;
 
 public class OrderPlacedActivity extends AppCompatActivity {
     TextView textname, textadd1, textadd2, textadd3,textOrderId,textTotal,textTime;
+    Button orderList;
     RecyclerView.LayoutManager layoutManager;
 
     String Name, uid, orderId;
@@ -57,6 +61,7 @@ public class OrderPlacedActivity extends AppCompatActivity {
         textadd2=findViewById(R.id.placed_deliveryAdd2);
         textadd3=findViewById(R.id.placed_deliveryAdd3);
         placedObejct_Recycler=findViewById(R.id.placedOrderRecycler);
+        orderList=findViewById(R.id.allOrders);
 
         layoutManager = new LinearLayoutManager(this);
         placedObejct_Recycler.setLayoutManager(layoutManager);
@@ -69,6 +74,15 @@ public class OrderPlacedActivity extends AppCompatActivity {
         Name = mypref.getString("name", "");
 
         fetch();
+
+        orderList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(OrderPlacedActivity.this,OrderPage.class);
+                startActivity(intent);
+
+            }
+        });
     }
 
 
@@ -81,10 +95,17 @@ public class OrderPlacedActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //model=dataSnapshot.getValue(Order_model.class);
                 Log.w(TAG,"Datasnapshot=>"+dataSnapshot);
-                Log.w(TAG,"model=>"+model);
-           /*     textTime.setText(dataSnapshot.child("delivery_date").getValue().toString()+"  "+dataSnapshot.child("delivery_time").getValue().toString());
-                textTotal.setText(dataSnapshot.child("sum").getValue().toString());
-*/
+
+                textTime.setText(String.valueOf(dataSnapshot.child("order_time").getValue()));
+                textTotal.setText("Total : "+dataSnapshot.child("sum").getValue(String.class));
+                textadd1.setText(String.valueOf(dataSnapshot.child("add1").getValue()));
+                textadd2.setText(String.valueOf(dataSnapshot.child("add2").getValue()));
+                textadd3.setText(String.valueOf(dataSnapshot.child("add3").getValue()));
+                textOrderId.setText(orderId);
+                textname.setText(String.valueOf(dataSnapshot.child("username").getValue()));
+
+
+
             }
 
             @Override
@@ -93,12 +114,12 @@ public class OrderPlacedActivity extends AppCompatActivity {
             }
         });
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("Orders").child(uid).child(orderId);
-        FirebaseRecyclerOptions<Order_model> options = new FirebaseRecyclerOptions.Builder<Order_model>()
-                .setQuery(query, Order_model.class)
+        Query query = FirebaseDatabase.getInstance().getReference().child("Orders").child(uid).child(orderId).child("OrderList");
+        FirebaseRecyclerOptions<Cart_model> options = new FirebaseRecyclerOptions.Builder<Cart_model>()
+                .setQuery(query, Cart_model.class)
                 .build();
         Log.w(TAG, "query=>" + query);
-        adapter = new FirebaseRecyclerAdapter<Order_model, ViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<Cart_model, ViewHolder>(options) {
 
             @NonNull
             @Override
@@ -109,16 +130,16 @@ public class OrderPlacedActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final Order_model model) {
+            protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final Cart_model model) {
 
                 Log.w(TAG, "OnbindViewHolder=>");
 
-           /*     holder.setProductname(model.getCart_Product_name());
+              holder.setProductname(model.getCart_Product_name());
                 holder.setProductPrice(model.getCart_Product_price());
                 holder.setQty(model.getCart_Product_qty(),model.getCart_measure());
 
                 holder.setProduct_img(model.getCart_Image());
-*/
+
 
             }
         };

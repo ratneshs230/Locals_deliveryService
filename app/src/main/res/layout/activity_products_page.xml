@@ -56,15 +56,26 @@
                     android:layout_weight="1"
                     android:background="#ffffff"
                     android:onClick="showPopup"
-                    android:src="@mipmap/border_all_24px_outlined" />
+                    android:src="@drawable/ic_filter_list_black_24dp" />
+                    android:src="@drawable/ic_filter_list_black_24dp" />
                 <ImageButton
-                    android:id="@+id/profile_link"
+                    android:id="@+id/prof_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#ffffff"
                     android:onClick="showPopup"
-                    android:src="@mipmap/border_all_24px_outlined" />
+
+                    android:src="@drawable/ic_person_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/order_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#ffffff"
+                    android:onClick="showPopup"
+                    android:src="@drawable/ic_card_travel_black_24dp" />
 
                 <ImageButton
                     android:id="@+id/cart_btn"

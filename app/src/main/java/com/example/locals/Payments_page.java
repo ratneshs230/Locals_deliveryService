@@ -64,7 +64,7 @@ Payments_page extends AppCompatActivity {
     private FirebaseRecyclerAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
     LinearLayout headings;
-
+    String timeFormat[],time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,14 +111,21 @@ Payments_page extends AppCompatActivity {
 
         key=orderRef.push().getKey();
 
+        timeFormat=Calendar.getInstance().getTime().toString().split("GMT");
+        time=timeFormat[0].trim();
+        Log.w(TAG,time);
         model.setOrderkey(key);
         model.setSum(sum+"");
         model.setAddress(address);
+        model.setAdd1(mypref.getString("add1",""));
+        model.setAdd2(mypref.getString("add2",""));
+        model.setAdd3(mypref.getString("add3",""));
         model.setUid(mypref.getString("uid",""));
-        model.setOrder_time(
-                Calendar.getInstance().getTime().toString());
-        Log.w(TAG,Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"/"+Calendar.getInstance().get(Calendar.MONTH)+"/"+Calendar.YEAR);
-        model.setOrder_date(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"/"+Calendar.getInstance().get(Calendar.MONTH)+"/"+Calendar.YEAR);
+        model.setOrder_time(time);
+        model.setUsername(Name);
+        model.setOrderPhone(mypref.getString("OrderPhone",""));
+
+        model.setOrder_date(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"/"+Calendar.getInstance().get(Calendar.MONTH)+"/2020");
 
 
         model.setStatus(false);

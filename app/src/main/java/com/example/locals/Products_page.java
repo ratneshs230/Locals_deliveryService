@@ -47,7 +47,7 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
     Products_model model;
     Map<String, Object> product_object;
     DatabaseReference ref;
-    ImageButton cart_btn,cat_btn,profile_link;
+    ImageButton cart_btn,cat_btn,profile_link,order_btn;
     String no;
     FirebaseAuth mAuth;
     FirebaseUser user;
@@ -74,8 +74,9 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
         editor.putString("uid",uid);
         editor.apply();
 
+        order_btn=findViewById(R.id.order_btn);
         products_recycler = findViewById(R.id.products_recycler);
-        profile_link=findViewById(R.id.profile_link);
+        profile_link=findViewById(R.id.prof_btn);
         title=findViewById(R.id.page_title);
         btn=findViewById(R.id.add_btn);
         product_object=new HashMap<>();
@@ -89,6 +90,13 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
         }else{
             btn.setVisibility(View.GONE);
         }
+        order_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Products_page.this,OrderPage.class);
+                startActivity(intent);
+            }
+        });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,9 +108,11 @@ public class Products_page extends AppCompatActivity implements PopupMenu.OnMenu
         profile_link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent=new Intent(Products_page.this,Profile_page.class);
+                startActivity(intent);
             }
         });
+
         cat_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -72,7 +72,11 @@ public class Order_Detail extends AppCompatActivity {
                         status.setText("Order Awaiting Delivery");
                     orderId.setText(orderModel.getOrderkey());
                     sum.setText("Rs : "+orderModel.getSum());
-                    mOp.setText(orderModel.getModeOfPayment());
+                    if(orderModel.getModeOfPayment().equals("Online"))
+                            mOp.setText("Online Upi Payment");
+                    else
+                        mOp.setText("Cash On Delivery");
+
                     toCust.setText("To "+orderModel.getUsername());
                     add.setText("At "+orderModel.getAddress());
 
@@ -96,7 +100,7 @@ public class Order_Detail extends AppCompatActivity {
             @NonNull
             @Override
             public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_objectview, parent, false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.orderplaced_view, parent, false);
                 return new ViewHolder(view);
             }
 
@@ -107,6 +111,7 @@ public class Order_Detail extends AppCompatActivity {
                 holder.setProductname(model.getCart_Product_name());
                 holder.setProductPrice(model.getTotal_price());
                 holder.setQty(model.getCart_Product_qty(),model.getCart_measure());
+                holder.setProduct_img(model.getCart_Image());
             }
         };
 

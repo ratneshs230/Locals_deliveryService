@@ -32,7 +32,7 @@ public class OrderPage extends AppCompatActivity {
     FirebaseDatabase databaseReference;
     String uid;
     String TAG="OrderPage";
-    private FirebaseRecyclerAdapter adapter,cat_adapter;
+    private FirebaseRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +41,20 @@ public class OrderPage extends AppCompatActivity {
         SharedPreferences pref=getSharedPreferences("Phone_Preference",MODE_PRIVATE);
         uid=pref.getString("uid","");
 
+        orderRecycler=findViewById(R.id.orderRecycler);
         databaseReference= FirebaseDatabase.getInstance();
         order_reference=databaseReference.getReference().child("Orders").child(uid);
         layoutManager = new LinearLayoutManager(this);
         orderRecycler.setLayoutManager(layoutManager);
 
+        fetch();
 
 
     }
 
 
     public void fetch() {
-        Query query = FirebaseDatabase.getInstance().getReference().child("Products");
+        Query query = order_reference;
         FirebaseRecyclerOptions<Order_model> options = new FirebaseRecyclerOptions.Builder<Order_model>()
                 .setQuery(query, Order_model.class)
                 .build();
@@ -69,35 +71,35 @@ public class OrderPage extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final Order_model model) {
 
-                holder.setOrderId(model.getOrderkey());
+                holder.setOrderId("Order Id :"+ model.getOrderkey());
                 if(model.getStatus()){
-                    holder.setOrderStatus("Delivered on "+model.getDelivery_date()+" , "+model.getDelivery_time());
-                    holder.setpaymentStatus("Payment Status : Paid");
+                    holder.setOrderStatus("Delivered on "+model.getDelivery_date());
+                    holder.setpaymentStatus("Payment Status:\n Paid");
                 }else{
                     if(model.getModeOfPayment().equals("Online")){
-                        holder.setpaymentStatus("Payment Status : Paid");
+                        holder.setpaymentStatus("Payment Status:\n Paid");
                     }else {
-                        holder.setpaymentStatus("Payment Status : Pending");
+                        holder.setpaymentStatus("Payment Status:\n Pending");
 
                     }
                     holder.setOrderStatus("Awaiting Delivery");
                 }
 
                 holder.setOrderTotal("Total : Rs"+model.getSum());
-                holder.setOrderAddress(model.getAddress());
-                holder.setOrderDate(model.getOrder_date()+" "+model.getDelivery_time());
+                holder.setOrderAddress("To :"+model.getUsername()+"\n"+model.getAdd1()+","+model.getAdd2()+"\n"+model.getAdd3());
+                holder.setOrderDate("Ordered on "+model.getOrder_date());
 
-               /* holder.root.setOnClickListener(new View.OnClickListener() {
+               holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(OrderPage.this, OrderDetails.class);
+                        Intent intent = new Intent(OrderPage.this, Order_Detail.class);
                         intent.putExtra("uid",uid);
-                        intent.putExtra("product_id", model.getKey());
-                        intent.putExtra("from","home");
+                        intent.putExtra("orderId", model.getOrderkey());
+
 
                         startActivity(intent);
                     }
-                });*/
+                });
             }
         };
 
@@ -145,7 +147,7 @@ public class OrderPage extends AppCompatActivity {
             OrderAddress.setText(address);
         }
         public void setpaymentStatus(String status) {
-            OrderStatus.setText(status);
+            PaymentStatus.setText(status);
         }
 
     }

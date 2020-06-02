@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".OrderPlacedActivity"></activity>
         <activity android:name=".Profile_page" />
+        <activity android:name=".Order_Detail" />
         <activity android:name=".Bottom_navigation" />
         <activity android:name=".OrderPage" />
         <activity android:name=".User_details" />

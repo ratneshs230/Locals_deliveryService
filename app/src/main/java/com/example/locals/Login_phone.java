@@ -1,7 +1,9 @@
 package com.example.locals;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,11 @@ public class Login_phone extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_phone);
+
+        SharedPreferences mypref=getSharedPreferences("Phone_Preference",MODE_PRIVATE);
+        String uid=mypref.getString("uid","");
+        Log.w(TAG,"UID"+uid);
+
 
 
 
